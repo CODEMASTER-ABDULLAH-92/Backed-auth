@@ -10,7 +10,7 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 // remove the forward slash /
-const allowedOrigins =['http://localhost:5173'] 
+const allowedOrigins =['http://localhost:5173','https://backed-auth-szcg.vercel.app'] 
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({origin:allowedOrigins,credentials:true}))
