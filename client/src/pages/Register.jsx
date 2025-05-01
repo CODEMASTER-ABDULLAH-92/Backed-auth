@@ -10,8 +10,6 @@ const Register = () => {
 
   axios.defaults.withCredentials = true;
   axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
-  
-  
   const onsubmitHandler = async (e) => {
     try {
       e.preventDefault();
@@ -23,7 +21,7 @@ const Register = () => {
         setPassword("")
         navigate("/abdullah")
       }else{
-        toast.error(data.error)
+        toast.error(data.message)
       }
     } catch (error) {
       toast.error(error.message);
