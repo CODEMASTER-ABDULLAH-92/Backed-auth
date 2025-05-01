@@ -18,20 +18,25 @@ const Loginuser = async (req,res) => {
             return res.json({success:false,message:"Invalid Credentails"}) 
         }
         const token = jwt.sign({_id:existingUser._id},process.env.JWT_SECRET_KEY,{expiresIn:"7d"})
-        res.cookie("token",token,{
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-        })
+        // res.cookie("token",token,{
+        //     httpOnly: true,
+        //     secure: process.env.NODE_ENV === "production",
+        //     sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        //     maxAge: 7 * 24 * 60 * 60 * 1000,
+        // })
+
+        res.cookie("token", token, {
+            httpOnly: true,      // Prevents JS access (security)
+            secure: false,       // Allow HTTP (for development)
+            sameSite: "lax",     // Balances security & cross-site usage
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
         res.json({success:true,existingUser:{email:existingUser.email , name:existingUser.name}})   
     } catch (error) {
         res.json({ success: false, message: error.message });
         console.error("Err", error.message);
     }
 }
-
-
 const registerUser = async (req, res) => {
     try {
         const { name, password, email } = req.body;
@@ -59,10 +64,18 @@ const registerUser = async (req, res) => {
         const userData = await userModel.create({ name, email, password: hashedPassword });
         const token = jwt.sign({ _id: userData._id }, process.env.JWT_SECRET_KEY, { expiresIn: "7d" });
 
+        // res.cookie("token", token, {
+        //     httpOnly: true,
+        //     secure: process.env.NODE_ENV === "production",
+        //     sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        //     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        // });
+
+
         res.cookie("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+            httpOnly: true,      // Prevents JS access (security)
+            secure: false,       // Allow HTTP (for development)
+            sameSite: "lax",     // Balances security & cross-site usage
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
 
